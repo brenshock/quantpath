@@ -1,0 +1,27 @@
+{
+  "id": "fsa-03",
+  "title": "First Matching Pair",
+  "difficulty": 3,
+  "primaryTechnique": "first-step-analysis",
+  "secondaryTechniques": ["state-modeling", "conditional-probability"],
+  "prerequisites": ["basic-expected-value", "conditional-probability"],
+  "tags": ["biased-coins", "waiting-time", "patterns"],
+  "problem": "A coin lands heads with probability 3/5 and tails with probability 2/5. It is flipped until two consecutive flips match—that is, until HH or TT first appears. What is the expected total number of flips?",
+  "hints": [
+    { "level": 1, "text": "After the first flip, the expected remaining time depends on whether that flip was heads or tails." },
+    { "level": 2, "text": "Let EH and ET be expected additional flips given that the latest flip is H or T. Then EH = 1 + (2/5)ET and ET = 1 + (3/5)EH." }
+  ],
+  "solution": {
+    "setup": "Let EH and ET denote expected additional flips when the latest result is H or T. The first flip is handled separately.",
+    "reasoning": "From H, the next flip ends the game with probability 3/5 and moves to state T with probability 2/5, so EH = 1 + (2/5)ET. Similarly, ET = 1 + (3/5)EH. Substituting gives EH = 1 + (2/5)(1 + (3/5)EH), hence (19/25)EH = 7/5 and EH = 35/19. Then ET = 1 + (3/5)(35/19) = 40/19. Starting before any flip, E = 1 + (3/5)EH + (2/5)ET = 1 + 21/19 + 16/19 = 56/19.",
+    "finalAnswer": "56/19 flips (approximately 2.947)",
+    "sanityCheck": "For a fair coin, symmetry would give 3 flips. Bias makes matching slightly easier, so a value just below 3 is sensible."
+  },
+  "keyInsight": "The last flip is the only history that affects the next-step stopping probability, but the two last-flip states have different values because the coin is biased.",
+  "recognitionCues": ["A repeated process stops on a local pattern, and the transition probabilities depend on a small amount of recent history."],
+  "commonMistakes": ["Using a single success probability for each adjacent pair and incorrectly treating overlapping pairs as independent."],
+  "followUps": ["Derive the expectation for general head probability p.", "For which value of p is the expected waiting time largest?"],
+  "source": { "type": "original", "notes": "Original biased-coin variant created to require distinct first-step states." },
+  "verification": { "status": "math-verified", "method": "exact-linear-system-and-symbolic-cross-check", "expectedValue": "56/19", "notes": "Exact state equations give EH=35/19, ET=40/19, and start value 56/19; iterative state calculation is implemented in scripts/verify_answers.py." },
+  "reviewStatus": "approved"
+}

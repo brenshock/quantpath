@@ -1,0 +1,27 @@
+{
+  "id": "loe-03",
+  "title": "Neighbors After a Shuffle",
+  "difficulty": 3,
+  "primaryTechnique": "linearity-of-expectation",
+  "secondaryTechniques": ["indicator-variables", "counting-combinatorics"],
+  "prerequisites": ["basic-expected-value", "basic-probability"],
+  "tags": ["permutations", "adjacency", "expected-count"],
+  "problem": "The numbers 1 through 10 are placed in a uniformly random order. Call a neighboring pair special if the two numbers differ by exactly 1. What is the expected number of special neighboring pairs?",
+  "hints": [
+    { "level": 1, "text": "There are nine value-pairs that could become special: {1,2}, {2,3}, ..., {9,10}." },
+    { "level": 2, "text": "For a fixed pair such as {4,5}, treat its two members as one block and calculate the probability that they are adjacent." }
+  ],
+  "solution": {
+    "setup": "For k=1,...,9, let Ik indicate that values k and k+1 appear next to each other. The number of special neighboring pairs is S = I1 + ... + I9.",
+    "reasoning": "For a fixed k, fuse k and k+1 into a block. There are 9! arrangements of the block and the other eight values, and the block has two internal orders, giving 2*9! favorable permutations out of 10!. Thus P(Ik=1)=2/10=1/5. By linearity, E[S]=9*(1/5). Overlaps between events, such as 3 being adjacent to both 2 and 4, do not require independence.",
+    "finalAnswer": "9/5 (1.8)",
+    "sanityCheck": "A random arrangement has nine adjacent position-pairs. For any one such position-pair, 18 of the 90 ordered pairs of distinct values differ by one, so its special probability is 1/5; 9*(1/5)=9/5 again."
+  },
+  "keyInsight": "Count each possible consecutive-value relationship, not each physical gap, and add its probability of appearing.",
+  "recognitionCues": ["The target is an expected number of local patterns in a random global arrangement."],
+  "commonMistakes": ["Using 1/10 instead of 2/10 and forgetting the two possible internal orders of a neighboring pair."],
+  "followUps": ["For a random ordering of 1 through n, what is the expected number of neighboring pairs whose values differ by exactly d?"],
+  "source": { "type": "original", "notes": "Original formulation of a standard random-permutation adjacency family." },
+  "verification": { "status": "math-verified", "method": "two-independent-counting-derivations-and-exhaustive-check", "expectedValue": "9/5", "notes": "Block counting and gap counting agree; exhaustive enumeration is implemented in scripts/verify_answers.py." },
+  "reviewStatus": "approved"
+}

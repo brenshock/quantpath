@@ -1,0 +1,27 @@
+{
+  "id": "cp-01",
+  "title": "A Revealed Even Roll",
+  "difficulty": 1,
+  "primaryTechnique": "conditional-probability",
+  "secondaryTechniques": [],
+  "prerequisites": ["basic-probability"],
+  "tags": ["dice", "sample-space"],
+  "problem": "A fair six-sided die is rolled. You are told that the result is even. What is the probability that the result is greater than 3?",
+  "hints": [
+    { "level": 1, "text": "Remove every outcome that is inconsistent with the information you were given." },
+    { "level": 2, "text": "Conditional on an even result, the possible outcomes are 2, 4, and 6." }
+  ],
+  "solution": {
+    "setup": "Let E be the event that the roll is even and G the event that it is greater than 3.",
+    "reasoning": "After conditioning on E, the equally likely sample space is {2, 4, 6}. Two of these three outcomes, 4 and 6, are in G. Equivalently, P(G | E) = P(G and E) / P(E) = (2/6) / (3/6).",
+    "finalAnswer": "2/3",
+    "sanityCheck": "The answer must exceed the unconditional probability 1/2 because learning that the result is even removes two small outcomes, 1 and 3, but only one large outcome, 5."
+  },
+  "keyInsight": "Conditioning changes the denominator: only outcomes compatible with the revealed information remain relevant.",
+  "recognitionCues": ["The phrase 'you are told that' signals that the sample space must be updated."],
+  "commonMistakes": ["Using all six die outcomes after the even result has been revealed."],
+  "followUps": ["What is the answer if you are instead told that the roll is at least 2?"],
+  "source": { "type": "original", "notes": "Original introductory exercise using a standard die model." },
+  "verification": { "status": "math-verified", "method": "exhaustive-enumeration", "expectedValue": "2/3", "notes": "Enumerated the conditional sample space {2,4,6}; favorable outcomes are {4,6}." },
+  "reviewStatus": "approved"
+}

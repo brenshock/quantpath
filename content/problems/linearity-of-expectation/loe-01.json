@@ -1,0 +1,27 @@
+{
+  "id": "loe-01",
+  "title": "Heads Across Ten Coins",
+  "difficulty": 1,
+  "primaryTechnique": "linearity-of-expectation",
+  "secondaryTechniques": ["indicator-variables"],
+  "prerequisites": ["basic-expected-value"],
+  "tags": ["coins", "expected-count"],
+  "problem": "Ten coins are flipped. Coin i has probability i/11 of landing heads, for i = 1, 2, ..., 10. The flips need not be independent. What is the expected total number of heads?",
+  "hints": [
+    { "level": 1, "text": "Write the total number of heads as a sum of ten yes-or-no contributions." },
+    { "level": 2, "text": "If Xi indicates whether coin i is heads, then E[Xi] = i/11 and E[X1 + ... + X10] is the sum of those expectations." }
+  ],
+  "solution": {
+    "setup": "Define Xi = 1 when coin i lands heads and Xi = 0 otherwise. Let H = X1 + ... + X10.",
+    "reasoning": "By linearity of expectation, E[H] = sum from i=1 to 10 of E[Xi] = sum from i=1 to 10 of i/11. The numerator is 1+2+...+10 = 55, so E[H] = 55/11. Independence is unnecessary because only the marginal probability of each head enters its individual expectation.",
+    "finalAnswer": "5",
+    "sanityCheck": "The probabilities pair to one: 1/11+10/11, 2/11+9/11, and so on. Five such pairs give expected total 5."
+  },
+  "keyInsight": "Expectation distributes over a sum even when the summands are dependent.",
+  "recognitionCues": ["The question asks for an expected total count and gives an individual probability for each contribution."],
+  "commonMistakes": ["Trying to determine a joint distribution or assuming independence is required."],
+  "followUps": ["Would the answer change if exactly one of each paired coins i and 11-i were guaranteed to land heads?"],
+  "source": { "type": "original", "notes": "Original exercise designed to make the non-independence point explicit." },
+  "verification": { "status": "math-verified", "method": "symbolic-summation", "expectedValue": "5", "notes": "Sum i/11 for i=1,...,10 equals 55/11 = 5." },
+  "reviewStatus": "approved"
+}

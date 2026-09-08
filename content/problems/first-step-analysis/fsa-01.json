@@ -1,0 +1,27 @@
+{
+  "id": "fsa-01",
+  "title": "Waiting for a Six",
+  "difficulty": 1,
+  "primaryTechnique": "first-step-analysis",
+  "secondaryTechniques": [],
+  "prerequisites": ["basic-expected-value", "basic-probability"],
+  "tags": ["dice", "waiting-time"],
+  "problem": "A fair six-sided die is rolled repeatedly until a 6 appears. What is the expected number of rolls, including the final roll?",
+  "hints": [
+    { "level": 1, "text": "After the first roll, either the process ends or you are back in exactly the situation where you started." },
+    { "level": 2, "text": "If E is the expected number of rolls, write E = 1 + (5/6)E." }
+  ],
+  "solution": {
+    "setup": "Let E denote the expected number of rolls from the start of the process.",
+    "reasoning": "The first roll always costs one roll. With probability 1/6 it is a 6 and no more rolls are needed. With probability 5/6 it is not a 6, and the process restarts with expected remaining cost E. Therefore E = 1 + (1/6)*0 + (5/6)E. Rearranging gives E/6 = 1.",
+    "finalAnswer": "6 rolls",
+    "sanityCheck": "A success occurs with probability 1/6 per independent roll, so the geometric-distribution rule 1/p also gives 6."
+  },
+  "keyInsight": "A failed roll returns the process to its original state, so the unknown expectation naturally appears on both sides of the equation.",
+  "recognitionCues": ["Repeated independent attempts continue until the first success."],
+  "commonMistakes": ["Forgetting to count the first roll before considering what happens next."],
+  "followUps": ["What is the expected number of rolls until a 5 or 6 appears?"],
+  "source": { "type": "original", "notes": "Original introductory geometric waiting-time exercise." },
+  "verification": { "status": "math-verified", "method": "first-step-equation-and-geometric-cross-check", "expectedValue": "6", "notes": "E=1+(5/6)E implies E=6; agrees with 1/p." },
+  "reviewStatus": "approved"
+}

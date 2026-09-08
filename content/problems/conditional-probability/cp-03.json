@@ -1,0 +1,27 @@
+{
+  "id": "cp-03",
+  "title": "At Least One Ace",
+  "difficulty": 3,
+  "primaryTechnique": "conditional-probability",
+  "secondaryTechniques": ["counting-combinatorics"],
+  "prerequisites": ["basic-probability", "counting-combinatorics"],
+  "tags": ["cards", "complementary-counting"],
+  "problem": "Two cards are dealt uniformly at random from a standard 52-card deck, without replacement. You are told that the two-card hand contains at least one ace. What is the probability that both cards are aces?",
+  "hints": [
+    { "level": 1, "text": "Count hands, not stories about which card might have been observed first." },
+    { "level": 2, "text": "The number of eligible hands is all two-card hands minus hands containing no ace." }
+  ],
+  "solution": {
+    "setup": "All unordered two-card hands are equally likely. Restrict attention to hands containing at least one ace.",
+    "reasoning": "There are C(52,2) - C(48,2) = 1326 - 1128 = 198 eligible hands. Of these, C(4,2) = 6 contain two aces. Therefore the conditional probability is 6/198.",
+    "finalAnswer": "1/33",
+    "sanityCheck": "Most eligible hands contain exactly one ace: there are 4*48 = 192 such hands versus only 6 double-ace hands, giving 6/(192+6) = 1/33."
+  },
+  "keyInsight": "The conditioning event is about the entire hand, so the correct equally likely objects are unordered hands satisfying that event.",
+  "recognitionCues": ["The wording 'at least one' often makes complementary counting the cleanest way to construct the conditional denominator."],
+  "commonMistakes": ["Answering 1/17 by imagining that a particular ace was exposed; that is a different information-revelation process."],
+  "followUps": ["How would the answer change if one specific card were revealed to be an ace?", "How would it change if a uniformly selected card from the hand were revealed and happened to be an ace?"],
+  "source": { "type": "original", "notes": "Original formulation of a classic conditional-probability problem family; wording specifies the information protocol." },
+  "verification": { "status": "math-verified", "method": "combinatorial-count-and-independent-case-check", "expectedValue": "1/33", "notes": "Eligible hands: 192 with exactly one ace plus 6 with two aces; 6/198 = 1/33." },
+  "reviewStatus": "approved"
+}

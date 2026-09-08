@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quantprep.local/schemas/problem.schema.json",
+  "title": "QuantPrep Problem",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "title", "difficulty", "primaryTechnique", "secondaryTechniques",
+    "prerequisites", "tags", "problem", "hints", "solution", "keyInsight",
+    "recognitionCues", "commonMistakes", "followUps", "source", "verification",
+    "reviewStatus"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 3 },
+    "difficulty": { "type": "integer", "minimum": 1, "maximum": 4 },
+    "primaryTechnique": { "type": "string" },
+    "secondaryTechniques": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "maxItems": 3 },
+    "prerequisites": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "tags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "minItems": 1, "maxItems": 3 },
+    "problem": { "type": "string", "minLength": 20 },
+    "hints": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["level", "text"],
+        "properties": { "level": { "type": "integer", "minimum": 1, "maximum": 2 }, "text": { "type": "string", "minLength": 10 } }
+      }
+    },
+    "solution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["setup", "reasoning", "finalAnswer", "sanityCheck"],
+      "properties": {
+        "setup": { "type": "string", "minLength": 10 },
+        "reasoning": { "type": "string", "minLength": 20 },
+        "finalAnswer": { "type": "string", "minLength": 1 },
+        "sanityCheck": { "type": "string", "minLength": 10 }
+      }
+    },
+    "keyInsight": { "type": "string", "minLength": 10 },
+    "recognitionCues": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "commonMistakes": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "followUps": { "type": "array", "items": { "type": "string" } },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["type", "notes"],
+      "properties": { "type": { "enum": ["original", "public-domain", "licensed"] }, "notes": { "type": "string" } }
+    },
+    "verification": {
+      "type": "object", "additionalProperties": false, "required": ["status", "method", "expectedValue", "notes"],
+      "properties": {
+        "status": { "enum": ["unverified", "math-verified"] },
+        "method": { "type": "string" },
+        "expectedValue": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "reviewStatus": { "enum": ["needs-human-review", "approved", "published"] }
+  }
+}

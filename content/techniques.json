@@ -1,0 +1,83 @@
+[
+  {
+    "id": "conditional-probability",
+    "title": "Conditional Probability",
+    "status": "active",
+    "summary": "Update the relevant sample space when new information is revealed.",
+    "recognitionCues": [
+      "The problem says given that, conditional on, or reveals partial information.",
+      "The observation rules out some previously possible outcomes.",
+      "The denominator should change after the new information arrives."
+    ],
+    "prerequisites": ["basic-probability", "counting-combinatorics"]
+  },
+  {
+    "id": "linearity-of-expectation",
+    "title": "Linearity of Expectation",
+    "status": "active",
+    "summary": "Compute an expected total by decomposing it into simpler contributions, even when those contributions are dependent.",
+    "recognitionCues": [
+      "The target is an expected count or total.",
+      "The total can be written as a sum of smaller random variables.",
+      "Finding the complete distribution looks much harder than finding individual expectations."
+    ],
+    "prerequisites": ["basic-expected-value", "indicator-variables"]
+  },
+  {
+    "id": "first-step-analysis",
+    "title": "First-Step Analysis",
+    "status": "active",
+    "summary": "Condition on the next outcome and express an unknown expectation in terms of simpler states, sometimes including itself.",
+    "recognitionCues": [
+      "The process repeats until a stopping condition occurs.",
+      "After one step, the process either finishes, restarts, or moves to one of a few states.",
+      "The desired expectation can be related recursively to expectations from those states."
+    ],
+    "prerequisites": ["basic-expected-value", "conditional-probability"]
+  },
+  {
+    "id": "basic-probability",
+    "title": "Basic Probability",
+    "status": "planned"
+  },
+  {
+    "id": "bayes-theorem",
+    "title": "Bayes' Theorem",
+    "status": "planned"
+  },
+  {
+    "id": "counting-combinatorics",
+    "title": "Counting and Combinatorics",
+    "status": "planned"
+  },
+  {
+    "id": "symmetry",
+    "title": "Symmetry",
+    "status": "planned"
+  },
+  {
+    "id": "basic-expected-value",
+    "title": "Basic Expected Value",
+    "status": "planned"
+  },
+  {
+    "id": "indicator-variables",
+    "title": "Indicator Variables",
+    "status": "planned"
+  },
+  {
+    "id": "state-modeling",
+    "title": "State Modeling",
+    "status": "planned"
+  },
+  {
+    "id": "random-walks-stopping",
+    "title": "Random Walks and Stopping",
+    "status": "planned"
+  },
+  {
+    "id": "market-expected-value",
+    "title": "Market Expected-Value Reasoning",
+    "status": "planned"
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "id": "fsa-02",
+  "title": "Two Heads in a Row",
+  "difficulty": 2,
+  "primaryTechnique": "first-step-analysis",
+  "secondaryTechniques": ["state-modeling"],
+  "prerequisites": ["basic-expected-value", "conditional-probability"],
+  "tags": ["coins", "waiting-time", "patterns"],
+  "problem": "A fair coin is flipped repeatedly until two consecutive heads appear. What is the expected number of flips, including the final flip?",
+  "hints": [
+    { "level": 1, "text": "The process has two relevant nonterminal states: no useful trailing head, and one trailing head." },
+    { "level": 2, "text": "Let E0 and E1 be the expected remaining flips in those states. Write one first-step equation for each." }
+  ],
+  "solution": {
+    "setup": "Let E0 be the expected remaining flips when the latest flip is not a head (including at the start), and E1 when exactly one useful trailing head has been seen.",
+    "reasoning": "From state 0, the next flip costs 1; a tail returns to state 0 and a head moves to state 1. Thus E0 = 1 + (1/2)E0 + (1/2)E1. From state 1, a head finishes while a tail returns to state 0, so E1 = 1 + (1/2)*0 + (1/2)E0. Substitution gives E0 = 1 + E0/2 + (1 + E0/2)/2 = 3/2 + 3E0/4, hence E0/4 = 3/2.",
+    "finalAnswer": "6 flips",
+    "sanityCheck": "The answer should exceed 4, the naive reciprocal of P(HH)=1/4, because overlapping two-flip windows are not independent and a tail destroys partial progress."
+  },
+  "keyInsight": "Track only the suffix of recent outcomes that can still contribute to completing the target pattern.",
+  "recognitionCues": ["The stopping rule depends on a short recent history, so one expectation is not enough but a small set of states is."],
+  "commonMistakes": ["Answering 4 by treating successive two-flip windows as independent attempts."],
+  "followUps": ["What is the expected number of flips until either HH or TT first appears?", "How does the answer change for a coin with head probability p?"],
+  "source": { "type": "original", "notes": "Original exposition of a classical consecutive-heads problem family." },
+  "verification": { "status": "math-verified", "method": "exact-linear-system-and-finite-state-cross-check", "expectedValue": "6", "notes": "Solving E0=1+(E0+E1)/2 and E1=1+E0/2 gives E0=6; iterative state calculation is implemented in scripts/verify_answers.py." },
+  "reviewStatus": "approved"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "loe-02",
+  "title": "Fixed Points in a Shuffle",
+  "difficulty": 2,
+  "primaryTechnique": "linearity-of-expectation",
+  "secondaryTechniques": ["indicator-variables", "symmetry"],
+  "prerequisites": ["basic-expected-value", "basic-probability"],
+  "tags": ["permutations", "expected-count"],
+  "problem": "Eight distinct cards numbered 1 through 8 are uniformly shuffled into eight numbered positions. What is the expected number of cards that finish in the position matching their number?",
+  "hints": [
+    { "level": 1, "text": "Consider each card separately rather than trying to count every possible number of matches." },
+    { "level": 2, "text": "Let Xi indicate that card i lands in position i. What is P(Xi = 1)?" }
+  ],
+  "solution": {
+    "setup": "For each i, let Xi equal 1 if card i occupies position i and 0 otherwise. The number of matches is X = X1 + ... + X8.",
+    "reasoning": "In a uniform shuffle, card i is equally likely to occupy any of the eight positions, so E[Xi] = P(Xi=1) = 1/8. Linearity gives E[X] = 8*(1/8). The match events are dependent, but that does not affect the calculation.",
+    "finalAnswer": "1",
+    "sanityCheck": "The same argument works for any positive number n of cards, producing n*(1/n)=1; small cases n=1 and n=2 agree."
+  },
+  "keyInsight": "A complicated dependent count can have a simple expectation when each possible contribution is considered separately.",
+  "recognitionCues": ["Expected number of matches suggests one indicator for each possible match."],
+  "commonMistakes": ["Attempting to enumerate derangements and every possible number of fixed points."],
+  "followUps": ["What is the expected number of cards within one position of their original position?"],
+  "source": { "type": "original", "notes": "Original wording of the classical fixed-points expectation family." },
+  "verification": { "status": "math-verified", "method": "indicator-proof-and-exhaustive-permutation-check", "expectedValue": "1", "notes": "Each of eight fixed-point indicators has expectation 1/8; exhaustive enumeration is implemented in scripts/verify_answers.py." },
+  "reviewStatus": "approved"
+}
