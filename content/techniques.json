@@ -78,6 +78,21 @@
   {
     "id": "market-expected-value",
     "title": "Market Expected-Value Reasoning",
-    "status": "planned"
+    "status": "active"
+  },
+  {
+    "id": "invariants",
+    "title": "Invariants",
+    "status": "active"
+  },
+  {
+    "id": "information-strategy",
+    "title": "Information Strategy",
+    "status": "active"
+  },
+  {
+    "id": "conditional-expectation",
+    "title": "Conditional Expectation",
+    "status": "active"
   }
 ]

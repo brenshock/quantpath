@@ -5,7 +5,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "id", "title", "difficulty", "primaryTechnique", "secondaryTechniques",
+    "id", "title", "difficulty", "mode", "categories", "techniqueVisibility", "sequence", "primaryTechnique", "secondaryTechniques",
     "prerequisites", "tags", "problem", "hints", "solution", "keyInsight",
     "recognitionCues", "commonMistakes", "followUps", "source", "verification",
     "reviewStatus"
@@ -14,6 +14,10 @@
     "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
     "title": { "type": "string", "minLength": 3 },
     "difficulty": { "type": "integer", "minimum": 1, "maximum": 4 },
+    "mode": { "enum": ["learn", "practice"] },
+    "categories": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "minItems": 1, "maxItems": 3 },
+    "techniqueVisibility": { "enum": ["shown", "hidden-until-solution"] },
+    "sequence": { "type": "integer", "minimum": 1 },
     "primaryTechnique": { "type": "string" },
     "secondaryTechniques": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "maxItems": 3 },
     "prerequisites": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
