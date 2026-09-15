@@ -94,5 +94,8 @@
     "id": "conditional-expectation",
     "title": "Conditional Expectation",
     "status": "active"
-  }
+  },
+  {"id":"distributions-statistics","title":"Distributions and Statistics","status":"active"},
+  {"id":"game-strategy","title":"Game Strategy","status":"active"},
+  {"id":"estimation-calibration","title":"Estimation and Calibration","status":"active"}
 ]

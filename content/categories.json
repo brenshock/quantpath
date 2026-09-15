@@ -1,14 +1,14 @@
 [
   {"id":"counting-sample-spaces","title":"Counting and Sample Spaces","status":"active","summary":"Model equally likely outcomes and count them without overcounting."},
   {"id":"conditional-probability-bayes","title":"Conditional Probability and Bayes","status":"active","summary":"Update probabilities when observations change the relevant sample space."},
-  {"id":"expected-value","title":"Expected Value","status":"planned","summary":"Evaluate uncertain payoffs and long-run averages."},
+  {"id":"expected-value","title":"Expected Value","status":"active","summary":"Evaluate uncertain payoffs and long-run averages."},
   {"id":"linearity-indicators","title":"Linearity and Indicator Variables","status":"active","summary":"Break expected totals into simpler contributions without requiring independence."},
-  {"id":"symmetry-exchangeability","title":"Symmetry and Exchangeability","status":"planned","summary":"Use statistically identical roles to avoid unnecessary enumeration."},
+  {"id":"symmetry-exchangeability","title":"Symmetry and Exchangeability","status":"active","summary":"Use statistically identical roles to avoid unnecessary enumeration."},
   {"id":"recursion-state-modeling","title":"Recursion and State Modeling","status":"active","summary":"Describe repeated processes with a small set of states and first-step equations."},
-  {"id":"random-walks-stopping","title":"Random Walks and Stopping","status":"planned","summary":"Reason about evolving positions, boundaries, and stopping times."},
-  {"id":"distributions-statistics","title":"Distributions and Statistics","status":"planned","summary":"Go beyond averages to reason about variation, likelihood, and inference."},
+  {"id":"random-walks-stopping","title":"Random Walks and Stopping","status":"active","summary":"Reason about evolving positions, boundaries, and stopping times."},
+  {"id":"distributions-statistics","title":"Distributions and Statistics","status":"active","summary":"Go beyond averages to reason about variation, likelihood, and inference."},
   {"id":"logic-information-invariants","title":"Logic, Information, and Invariants","status":"active","summary":"Solve constraint and riddle problems by preserving structure and extracting information."},
-  {"id":"games-optimal-strategy","title":"Games and Optimal Strategy","status":"planned","summary":"Work backward from winning states and choose actions strategically."},
-  {"id":"estimation-calibration","title":"Estimation, Calibration, and Mental Math","status":"planned","summary":"Build defensible estimates, uncertainty ranges, and fast numerical intuition."},
+  {"id":"games-optimal-strategy","title":"Games and Optimal Strategy","status":"active","summary":"Work backward from winning states and choose actions strategically."},
+  {"id":"estimation-calibration","title":"Estimation, Calibration, and Mental Math","status":"active","summary":"Build defensible estimates, uncertainty ranges, and fast numerical intuition."},
   {"id":"markets-decision-making","title":"Markets and Decision-Making","status":"active","summary":"Turn uncertain payoffs and information into fair values, quotes, and trading decisions."}
 ]
