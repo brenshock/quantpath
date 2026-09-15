@@ -5,7 +5,6 @@ import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Shuffle } from 'lucide-r
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import categories from '../content/categories.json';
 import techniques from '../content/techniques.json';
 
@@ -120,12 +119,10 @@ export default function Home() {
           <span className="text-sm text-muted-foreground">{problems.length} problems · {learningCategories.length} active categories</span>
         </div>
 
-        <Tabs value={view} onValueChange={(value) => setView(value as 'learn' | 'practice')} className="mt-6">
-          <TabsList>
-            <TabsTrigger value="learn"><BookOpen /> Learn</TabsTrigger>
-            <TabsTrigger value="practice"><Shuffle /> Mixed practice</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="mt-6 flex w-fit gap-1 rounded-lg bg-muted p-1" role="tablist" aria-label="Practice mode">
+          <Button variant={view === 'learn' ? 'default' : 'ghost'} role="tab" aria-selected={view === 'learn'} onClick={() => setView('learn')}><BookOpen /> Learn</Button>
+          <Button variant={view === 'practice' ? 'default' : 'ghost'} role="tab" aria-selected={view === 'practice'} onClick={() => setView('practice')}><Shuffle /> Mixed practice</Button>
+        </div>
 
         {view === 'learn' ? <>
           <section className="mt-7" aria-labelledby="categories-title">
