@@ -1,10 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Shuffle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Search, Shuffle, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import categories from '../content/categories.json';
 import techniques from '../content/techniques.json';
 
@@ -37,12 +39,43 @@ export default function Home() {
   const [problemId, setProblemId] = useState<string | null>(null);
   const [visibleHints, setVisibleHints] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
+  const [search, setSearch] = useState('');
+  const [difficulty, setDifficulty] = useState('all');
+  const [practiceCategory, setPracticeCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('sequence');
   const problem = problems.find((item) => item.id === problemId) ?? null;
 
   const visibleProblems = useMemo(() => {
-    if (view === 'practice') return problems.filter((item) => item.mode === 'practice').sort((a, b) => a.sequence - b.sequence);
-    return problems.filter((item) => item.mode === 'learn' && item.categories[0] === categoryId).sort((a, b) => a.sequence - b.sequence);
-  }, [view, categoryId]);
+    const query = search.trim().toLowerCase();
+    const filtered = problems.filter((item) => {
+      if (item.mode !== view) return false;
+      if (view === 'learn' && item.categories[0] !== categoryId) return false;
+      if (view === 'practice' && practiceCategory !== 'all' && !item.categories.includes(practiceCategory)) return false;
+      if (difficulty !== 'all' && item.difficulty !== Number(difficulty)) return false;
+      if (!query) return true;
+      const searchable = [item.title, item.problem, item.primaryTechnique, ...item.categories, ...item.tags]
+        .map((value) => value.replaceAll('-', ' '))
+        .join(' ')
+        .toLowerCase();
+      return searchable.includes(query);
+    });
+
+    return filtered.sort((a, b) => {
+      if (sortBy === 'difficulty-asc') return a.difficulty - b.difficulty || a.sequence - b.sequence;
+      if (sortBy === 'difficulty-desc') return b.difficulty - a.difficulty || a.sequence - b.sequence;
+      if (sortBy === 'title') return a.title.localeCompare(b.title);
+      return a.sequence - b.sequence;
+    });
+  }, [view, categoryId, practiceCategory, difficulty, search, sortBy]);
+
+  const filtersActive = Boolean(search || difficulty !== 'all' || (view === 'practice' && practiceCategory !== 'all') || sortBy !== 'sequence');
+
+  function clearFilters() {
+    setSearch('');
+    setDifficulty('all');
+    setPracticeCategory('all');
+    setSortBy('sequence');
+  }
 
   function goHome(nextView: 'learn' | 'practice' = view) {
     setProblemId(null);
@@ -124,6 +157,23 @@ export default function Home() {
           <Button variant={view === 'practice' ? 'default' : 'ghost'} role="tab" aria-selected={view === 'practice'} onClick={() => setView('practice')}><Shuffle /> Mixed practice</Button>
         </div>
 
+        <section className="mt-6 rounded-xl border bg-card p-4" aria-label="Find and sort problems">
+          <div className={`grid gap-3 ${view === 'practice' ? 'md:grid-cols-[minmax(15rem,1fr)_repeat(3,minmax(10rem,auto))]' : 'md:grid-cols-[minmax(15rem,1fr)_repeat(2,minmax(10rem,auto))]'}`}>
+            <label className="relative block">
+              <span className="sr-only">Search problems</span>
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input className="pl-8" type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search titles, prompts, or topics" />
+            </label>
+            {view === 'practice' && <label><span className="sr-only">Problem category</span><NativeSelect className="w-full" value={practiceCategory} onChange={(event) => setPracticeCategory(event.target.value)}><NativeSelectOption value="all">All categories</NativeSelectOption>{learningCategories.map((item) => <NativeSelectOption key={item.id} value={item.id}>{item.title}</NativeSelectOption>)}</NativeSelect></label>}
+            <label><span className="sr-only">Difficulty</span><NativeSelect className="w-full" value={difficulty} onChange={(event) => setDifficulty(event.target.value)}><NativeSelectOption value="all">All difficulties</NativeSelectOption>{[1, 2, 3, 4, 5].map((level) => <NativeSelectOption key={level} value={level}>Difficulty {level}</NativeSelectOption>)}</NativeSelect></label>
+            <label><span className="sr-only">Sort problems</span><NativeSelect className="w-full" value={sortBy} onChange={(event) => setSortBy(event.target.value)}><NativeSelectOption value="sequence">Curriculum order</NativeSelectOption><NativeSelectOption value="difficulty-asc">Difficulty: low to high</NativeSelectOption><NativeSelectOption value="difficulty-desc">Difficulty: high to low</NativeSelectOption><NativeSelectOption value="title">Title: A to Z</NativeSelectOption></NativeSelect></label>
+          </div>
+          <div className="mt-3 flex min-h-8 items-center justify-between gap-4 text-sm text-muted-foreground">
+            <span>{visibleProblems.length} {visibleProblems.length === 1 ? 'problem' : 'problems'} shown</span>
+            {filtersActive && <Button variant="ghost" size="sm" onClick={clearFilters}><X /> Clear filters</Button>}
+          </div>
+        </section>
+
         {view === 'learn' ? <>
           <section className="mt-7" aria-labelledby="categories-title">
             <h2 id="categories-title" className="text-xl font-semibold">Choose a category</h2>
@@ -139,7 +189,7 @@ export default function Home() {
 }
 
 function ProblemList({ title, description, items, onOpen, revealTechnique }: { title: string; description: string; items: Problem[]; onOpen: (problem: Problem) => void; revealTechnique: boolean }) {
-  return <section className="mt-8"><h2 className="text-2xl font-semibold">{title}</h2><p className="mt-1 text-muted-foreground">{description}</p><div className="mt-5 grid gap-4">{items.map((item) => <Card key={item.id}><CardHeader><div className="flex flex-wrap gap-2"><Badge variant="outline">Difficulty {item.difficulty}</Badge>{item.categories.map((id) => <Badge key={id} variant="secondary">{categoryTitle(id)}</Badge>)}{revealTechnique && <Badge variant="outline">{techniqueTitle(item.primaryTechnique)}</Badge>}</div><CardTitle className="mt-2 text-lg">{item.title}</CardTitle><CardDescription>{item.problem}</CardDescription></CardHeader><CardContent className="flex items-center justify-between gap-4"><span className="flex items-center gap-2 text-sm text-muted-foreground"><CheckCircle2 className="size-4" /> Verified solution</span><Button onClick={() => onOpen(item)}>Practice <ArrowRight /></Button></CardContent></Card>)}</div></section>;
+  return <section className="mt-8"><h2 className="text-2xl font-semibold">{title}</h2><p className="mt-1 text-muted-foreground">{description}</p>{items.length === 0 ? <Card className="mt-5"><CardContent className="py-10 text-center"><p className="font-medium">No problems match these filters.</p><p className="mt-1 text-sm text-muted-foreground">Try a broader search or a different difficulty.</p></CardContent></Card> : <div className="mt-5 grid gap-4">{items.map((item) => <Card key={item.id}><CardHeader><div className="flex flex-wrap gap-2"><Badge variant="outline">Difficulty {item.difficulty}</Badge>{item.categories.map((id) => <Badge key={id} variant="secondary">{categoryTitle(id)}</Badge>)}{revealTechnique && <Badge variant="outline">{techniqueTitle(item.primaryTechnique)}</Badge>}</div><CardTitle className="mt-2 text-lg">{item.title}</CardTitle><CardDescription>{item.problem}</CardDescription></CardHeader><CardContent className="flex items-center justify-between gap-4"><span className="flex items-center gap-2 text-sm text-muted-foreground"><CheckCircle2 className="size-4" /> Verified solution</span><Button onClick={() => onOpen(item)}>Practice <ArrowRight /></Button></CardContent></Card>)}</div>}</section>;
 }
 
 function Header({ onLearn, onPractice }: { onLearn: () => void; onPractice: () => void }) { return <header className="border-b bg-card"><div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8"><button type="button" onClick={onLearn} className="text-lg font-semibold">QuantPrep</button><nav className="flex gap-5 text-sm"><button type="button" onClick={onLearn} className="hover:underline">Learn</button><button type="button" onClick={onPractice} className="hover:underline">Mixed practice</button></nav></div></header>; }
