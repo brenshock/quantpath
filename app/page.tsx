@@ -5,7 +5,6 @@ import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Search, Shuffle, X } fro
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import categories from '../content/categories.json';
 import techniques from '../content/techniques.json';
@@ -162,7 +161,7 @@ export default function Home() {
             <label className="relative block">
               <span className="sr-only">Search problems</span>
               <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input className="pl-8" type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search titles, prompts, or topics" />
+              <input className="h-8 w-full rounded-lg border border-input bg-transparent py-1 pl-8 pr-2.5 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm" type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search titles, prompts, or topics" />
             </label>
             {view === 'practice' && <label><span className="sr-only">Problem category</span><NativeSelect className="w-full" value={practiceCategory} onChange={(event) => setPracticeCategory(event.target.value)}><NativeSelectOption value="all">All categories</NativeSelectOption>{learningCategories.map((item) => <NativeSelectOption key={item.id} value={item.id}>{item.title}</NativeSelectOption>)}</NativeSelect></label>}
             <label><span className="sr-only">Difficulty</span><NativeSelect className="w-full" value={difficulty} onChange={(event) => setDifficulty(event.target.value)}><NativeSelectOption value="all">All difficulties</NativeSelectOption>{[1, 2, 3, 4, 5].map((level) => <NativeSelectOption key={level} value={level}>Difficulty {level}</NativeSelectOption>)}</NativeSelect></label>
