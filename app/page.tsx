@@ -45,11 +45,16 @@ export default function Home() {
   const problem = problems.find((item) => item.id === problemId) ?? null;
 
   const visibleProblems = useMemo(() => {
+    if (view === 'learn') {
+      return problems
+        .filter((item) => item.mode === 'learn' && item.categories[0] === categoryId)
+        .sort((a, b) => a.sequence - b.sequence);
+    }
+
     const query = search.trim().toLowerCase();
     const filtered = problems.filter((item) => {
-      if (item.mode !== view) return false;
-      if (view === 'learn' && item.categories[0] !== categoryId) return false;
-      if (view === 'practice' && practiceCategory !== 'all' && !item.categories.includes(practiceCategory)) return false;
+      if (item.mode !== 'practice') return false;
+      if (practiceCategory !== 'all' && !item.categories.includes(practiceCategory)) return false;
       if (difficulty !== 'all' && item.difficulty !== Number(difficulty)) return false;
       if (!query) return true;
       const searchable = [item.title, item.problem, item.primaryTechnique, ...item.categories, ...item.tags]
@@ -67,7 +72,7 @@ export default function Home() {
     });
   }, [view, categoryId, practiceCategory, difficulty, search, sortBy]);
 
-  const filtersActive = Boolean(search || difficulty !== 'all' || (view === 'practice' && practiceCategory !== 'all') || sortBy !== 'sequence');
+  const filtersActive = Boolean(search || difficulty !== 'all' || practiceCategory !== 'all' || sortBy !== 'sequence');
 
   function clearFilters() {
     setSearch('');
@@ -156,14 +161,14 @@ export default function Home() {
           <Button variant={view === 'practice' ? 'default' : 'ghost'} role="tab" aria-selected={view === 'practice'} onClick={() => setView('practice')}><Shuffle /> Mixed practice</Button>
         </div>
 
-        <section className="mt-6 rounded-xl border bg-card p-4" aria-label="Find and sort problems">
-          <div className={`grid gap-3 ${view === 'practice' ? 'md:grid-cols-[minmax(15rem,1fr)_repeat(3,minmax(10rem,auto))]' : 'md:grid-cols-[minmax(15rem,1fr)_repeat(2,minmax(10rem,auto))]'}`}>
+        {view === 'practice' && <section className="mt-6 rounded-xl border bg-card p-4" aria-label="Find and sort problems">
+          <div className="grid gap-3 md:grid-cols-[minmax(15rem,1fr)_repeat(3,minmax(10rem,auto))]">
             <label className="relative block">
               <span className="sr-only">Search problems</span>
               <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <input className="h-8 w-full rounded-lg border border-input bg-transparent py-1 pl-8 pr-2.5 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm" type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search titles, prompts, or topics" />
             </label>
-            {view === 'practice' && <label><span className="sr-only">Problem category</span><NativeSelect className="w-full" value={practiceCategory} onChange={(event) => setPracticeCategory(event.target.value)}><NativeSelectOption value="all">All categories</NativeSelectOption>{learningCategories.map((item) => <NativeSelectOption key={item.id} value={item.id}>{item.title}</NativeSelectOption>)}</NativeSelect></label>}
+            <label><span className="sr-only">Problem category</span><NativeSelect className="w-full" value={practiceCategory} onChange={(event) => setPracticeCategory(event.target.value)}><NativeSelectOption value="all">All categories</NativeSelectOption>{learningCategories.map((item) => <NativeSelectOption key={item.id} value={item.id}>{item.title}</NativeSelectOption>)}</NativeSelect></label>
             <label><span className="sr-only">Difficulty</span><NativeSelect className="w-full" value={difficulty} onChange={(event) => setDifficulty(event.target.value)}><NativeSelectOption value="all">All difficulties</NativeSelectOption>{[1, 2, 3, 4, 5].map((level) => <NativeSelectOption key={level} value={level}>Difficulty {level}</NativeSelectOption>)}</NativeSelect></label>
             <label><span className="sr-only">Sort problems</span><NativeSelect className="w-full" value={sortBy} onChange={(event) => setSortBy(event.target.value)}><NativeSelectOption value="sequence">Curriculum order</NativeSelectOption><NativeSelectOption value="difficulty-asc">Difficulty: low to high</NativeSelectOption><NativeSelectOption value="difficulty-desc">Difficulty: high to low</NativeSelectOption><NativeSelectOption value="title">Title: A to Z</NativeSelectOption></NativeSelect></label>
           </div>
@@ -171,7 +176,7 @@ export default function Home() {
             <span>{visibleProblems.length} {visibleProblems.length === 1 ? 'problem' : 'problems'} shown</span>
             {filtersActive && <Button variant="ghost" size="sm" onClick={clearFilters}><X /> Clear filters</Button>}
           </div>
-        </section>
+        </section>}
 
         {view === 'learn' ? <>
           <section className="mt-7" aria-labelledby="categories-title">
