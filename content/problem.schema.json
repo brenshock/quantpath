@@ -22,6 +22,7 @@
     "secondaryTechniques": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "maxItems": 3 },
     "prerequisites": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
     "tags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "minItems": 1, "maxItems": 3 },
+    "employers": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "minItems": 1 },
     "problem": { "type": "string", "minLength": 20 },
     "hints": {
       "type": "array", "minItems": 2, "maxItems": 2,
