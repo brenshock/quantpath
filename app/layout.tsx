@@ -6,8 +6,10 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://quantpath.brenshock.chatgpt.site'),
   title: 'QuantPath — Technique-first quant interview practice',
   description: 'Learn reusable quant interview techniques through progressive problems, guided hints, and verified solutions.',
+  alternates: { canonical: '/' },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -42,7 +42,12 @@ export function TutorChat({ problemId, solutionVisible }: { problemId: string; s
   const [notice, setNotice] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  useEffect(() => setDailyUsed(loadUsage()), []);
+  useEffect(() => {
+    setDailyUsed(loadUsage());
+    const syncUsage = () => setDailyUsed(loadUsage());
+    window.addEventListener('storage', syncUsage);
+    return () => window.removeEventListener('storage', syncUsage);
+  }, []);
   useEffect(() => () => abortRef.current?.abort(), []);
 
   const userMessages = useMemo(() => messages.filter((message) => message.role === 'user').length, [messages]);
@@ -52,6 +57,12 @@ export function TutorChat({ problemId, solutionVisible }: { problemId: string; s
 
   async function ask(question = input) {
     const cleanQuestion = question.trim().slice(0, MAX_QUESTION_LENGTH);
+    const currentUsage = loadUsage();
+    if (currentUsage >= DAILY_LIMIT) {
+      setDailyUsed(currentUsage);
+      setNotice('Daily tutor limit reached. Try again tomorrow.');
+      return;
+    }
     if (!cleanQuestion || blocked) return;
 
     const priorMessages = messages.slice(-6);
@@ -94,7 +105,7 @@ export function TutorChat({ problemId, solutionVisible }: { problemId: string; s
         setMessages((current) => [...current.slice(0, -1), { role: 'assistant', content: answer }]);
       }
 
-      const nextUsed = dailyUsed + 1;
+      const nextUsed = Math.min(DAILY_LIMIT, loadUsage() + 1);
       setDailyUsed(nextUsed);
       localStorage.setItem(USAGE_KEY, JSON.stringify({ date: today(), count: nextUsed }));
     } catch (error) {

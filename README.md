@@ -1,5 +1,7 @@
 # QuantPath practice site
 
+Production: https://quantpath.brenshock.chatgpt.site
+
 The site is a Vinext application deployed to OpenAI Sites. Problem content lives in `content/` and the accountless AI tutor is implemented by `app/api/tutor/route.ts` plus `components/tutor-chat.tsx`.
 
 ## AI tutor configuration
@@ -19,10 +21,11 @@ Current caps:
 - 8 user questions per problem conversation in the browser
 - 10 successful tutor questions per browser per day
 - 10 requests per anonymous browser ID and 30 requests per hashed IP per day on the server
+- 4 requests per browser and 8 requests per hashed IP per minute on the server
 - 320 maximum output tokens and a prompt instruction to stay under 180 words
 - no model tools, web search, file access, or user accounts
 
-The server limiter is intentionally best-effort because Worker memory is not durable across instances. The browser cap improves ordinary usage, while the OpenAI project hard spend limit is the actual billing backstop. Before public launch, configure a project hard limit of $5/month and a lower spend alert, then replace or supplement the in-memory limiter with durable Cloudflare storage if traffic grows.
+The server limiter is intentionally best-effort because Worker memory is not durable across instances. The browser cap improves ordinary usage, while the enforced OpenAI project spend limit is the billing backstop. If traffic grows, replace or supplement the in-memory limiter with durable Cloudflare storage.
 
 Run locally with:
 

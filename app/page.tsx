@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { TutorChat } from '@/components/tutor-chat';
+import { SiteFooter } from '@/components/site-footer';
 import categories from '../content/categories.json';
 import techniques from '../content/techniques.json';
 
@@ -152,6 +153,7 @@ export default function Home() {
             </nav>
           </article>
         </div>
+        <SiteFooter />
       </main>
     );
   }
@@ -198,6 +200,7 @@ export default function Home() {
           <ProblemList title={categoryTitle(categoryId)} description="Three guided problems that increase in difficulty." items={visibleProblems} onOpen={openProblem} revealTechnique />
         </> : <ProblemList title="Mixed interview practice" description="Categories are shown, but the primary technique stays hidden until you reveal the solution." items={visibleProblems} onOpen={openProblem} revealTechnique={false} />}
       </div>
+      <SiteFooter />
     </main>
   );
 }

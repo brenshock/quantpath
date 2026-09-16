@@ -17,6 +17,8 @@ const MAX_HISTORY_MESSAGES = 6;
 const MAX_ASSISTANT_HISTORY_LENGTH = 2400;
 const DAILY_BROWSER_LIMIT = 10;
 const DAILY_IP_LIMIT = 30;
+const MINUTE_BROWSER_LIMIT = 4;
+const MINUTE_IP_LIMIT = 8;
 const MODEL = 'gpt-5.6-luna';
 
 const problemModules = import.meta.glob('../../../content/problems/**/*.json', { eager: true, import: 'default' });
@@ -121,11 +123,19 @@ export async function POST(request: Request) {
   const ipHash = await hashedIp(request);
   const browserKey = `browser:${date}:${anonymousId}`;
   const ipKey = `ip:${date}:${ipHash}`;
+  const minute = new Date().toISOString().slice(0, 16);
+  const browserMinuteKey = `browser-minute:${minute}:${anonymousId}`;
+  const ipMinuteKey = `ip-minute:${minute}:${ipHash}`;
   if (countFor(browserKey) >= DAILY_BROWSER_LIMIT || countFor(ipKey) >= DAILY_IP_LIMIT) {
     return json('Daily tutor limit reached. Try again tomorrow.', 429, 'daily_limit_reached');
   }
+  if (countFor(browserMinuteKey) >= MINUTE_BROWSER_LIMIT || countFor(ipMinuteKey) >= MINUTE_IP_LIMIT) {
+    return json('Too many tutor questions at once. Wait a minute and try again.', 429, 'minute_limit_reached');
+  }
   increment(browserKey);
   increment(ipKey);
+  increment(browserMinuteKey);
+  increment(ipMinuteKey);
 
   let upstream: Response;
   try {

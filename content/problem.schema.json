@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://quantprep.local/schemas/problem.schema.json",
-  "title": "QuantPrep Problem",
+  "title": "QuantPath Problem",
   "type": "object",
   "additionalProperties": false,
   "required": [
