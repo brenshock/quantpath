@@ -138,6 +138,9 @@ export async function POST(request: Request) {
   if (!upstream.ok) {
     const requestId = upstream.headers.get('x-request-id');
     console.error('OpenAI tutor request failed', upstream.status, requestId ?? 'no-request-id');
+    if (upstream.status === 401) return json('The tutor API key is invalid or inactive.', 502, 'upstream_auth_error');
+    if (upstream.status === 429) return json('The tutor has reached its OpenAI billing or rate limit. Check the API project billing settings.', 503, 'upstream_limit');
+    if (upstream.status === 400) return json('The tutor model request needs configuration adjustment.', 502, 'upstream_request_error');
     return json('The tutor service could not answer right now.', 502, 'upstream_error');
   }
 
