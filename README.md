@@ -10,7 +10,7 @@ The tutor is disabled safely when `OPENAI_API_KEY` is absent. Add these as serve
 - `TUTOR_ENABLED`: optional kill switch; set to `false` to stop model calls
 - `TUTOR_RATE_LIMIT_SALT`: optional random secret for hashing IP addresses used by the best-effort server limiter
 
-The tutor uses `gpt-5.6-luna`, streams text from the Responses API, does not request response storage, and sends only the selected problem, its verified answer, and the six most recent chat messages.
+The tutor uses `gpt-5.6-luna` through the Responses API, does not request response storage, and sends only the selected problem, its verified answer, and the six most recent chat messages.
 
 Current caps:
 

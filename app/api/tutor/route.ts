@@ -128,7 +128,6 @@ export async function POST(request: Request) {
         reasoning: { effort: 'none' },
         max_output_tokens: 320,
         store: false,
-        stream: true,
         safety_identifier: ipHash,
       }),
     });
@@ -136,50 +135,25 @@ export async function POST(request: Request) {
     return json('The tutor service is temporarily unreachable.', 502, 'upstream_unreachable');
   }
 
-  if (!upstream.ok || !upstream.body) {
+  if (!upstream.ok) {
     const requestId = upstream.headers.get('x-request-id');
     console.error('OpenAI tutor request failed', upstream.status, requestId ?? 'no-request-id');
     return json('The tutor service could not answer right now.', 502, 'upstream_error');
   }
 
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
-  const reader = upstream.body.getReader();
-  let buffer = '';
+  const result = await upstream.json() as {
+    output?: Array<{ content?: Array<{ type?: string; text?: string }> }>;
+  };
+  const answer = result.output
+    ?.flatMap((item) => item.content ?? [])
+    .filter((item) => item.type === 'output_text')
+    .map((item) => item.text ?? '')
+    .join('')
+    .trim();
 
-  const stream = new ReadableStream<Uint8Array>({
-    async pull(controller) {
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-          controller.close();
-          return;
-        }
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() ?? '';
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6);
-          if (data === '[DONE]') continue;
-          try {
-            const event = JSON.parse(data) as { type?: string; delta?: string };
-            if (event.type === 'response.output_text.delta' && event.delta) {
-              controller.enqueue(encoder.encode(event.delta));
-              return;
-            }
-          } catch {
-            // Ignore malformed or non-JSON event lines from the upstream stream.
-          }
-        }
-      }
-    },
-    cancel() {
-      void reader.cancel();
-    },
-  });
+  if (!answer) return json('The tutor returned an empty answer. Please try again.', 502, 'empty_answer');
 
-  return new Response(stream, {
+  return new Response(answer, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
       'Cache-Control': 'no-store',
