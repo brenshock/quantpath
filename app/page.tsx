@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
+import { TutorChat } from '@/components/tutor-chat';
 import categories from '../content/categories.json';
 import techniques from '../content/techniques.json';
 
@@ -132,6 +133,8 @@ export default function Home() {
                 {visibleHints < 2 && <Button variant="outline" onClick={() => setVisibleHints(visibleHints + 1)}>Reveal hint {visibleHints + 1}</Button>}
               </div>
             </section>
+
+            <TutorChat key={problem.id} problemId={problem.id} solutionVisible={showSolution} />
 
             <section>
               <h2 className="mb-3 text-xl font-semibold">Solution</h2>
