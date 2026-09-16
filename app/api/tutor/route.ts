@@ -125,7 +125,7 @@ export async function POST(request: Request) {
         model: MODEL,
         instructions: instructionsFor(problem, body.solutionVisible === true),
         input: [...history, { role: 'user', content: question }],
-        reasoning: { effort: 'low' },
+        reasoning: { effort: 'none' },
         max_output_tokens: 320,
         store: false,
         stream: true,
