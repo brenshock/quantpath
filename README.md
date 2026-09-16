@@ -15,7 +15,7 @@ The tutor uses `gpt-5.6-luna` through the Responses API, does not request respon
 Current caps:
 
 - 500 characters per question
-- 6 prior messages sent to the model, each capped at 600 characters
+- 6 prior messages sent to the model; user messages are capped at 500 characters and tutor replies at 2,400 characters
 - 8 user questions per problem conversation in the browser
 - 10 successful tutor questions per browser per day
 - 10 requests per anonymous browser ID and 30 requests per hashed IP per day on the server

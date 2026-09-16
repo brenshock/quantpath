@@ -100,7 +100,7 @@ export function TutorChat({ problemId, solutionVisible }: { problemId: string; s
     } catch (error) {
       if (controller.signal.aborted) return;
       const message = error instanceof Error ? error.message : 'The tutor could not answer right now.';
-      setMessages((current) => current.slice(0, -1));
+      setMessages((current) => current.slice(0, -2));
       setNotice(message);
     } finally {
       setLoading(false);

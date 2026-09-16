@@ -14,7 +14,7 @@ type RateBucket = { date: string; count: number };
 
 const MAX_QUESTION_LENGTH = 500;
 const MAX_HISTORY_MESSAGES = 6;
-const MAX_MESSAGE_LENGTH = 600;
+const MAX_ASSISTANT_HISTORY_LENGTH = 2400;
 const DAILY_BROWSER_LIMIT = 10;
 const DAILY_IP_LIMIT = 30;
 const MODEL = 'gpt-5.6-luna';
@@ -40,7 +40,8 @@ function normalizeHistory(value: unknown): ChatMessage[] | null {
     const candidate = item as Record<string, unknown>;
     if ((candidate.role !== 'user' && candidate.role !== 'assistant') || typeof candidate.content !== 'string') return null;
     const content = candidate.content.trim();
-    if (!content || content.length > MAX_MESSAGE_LENGTH) return null;
+    const limit = candidate.role === 'user' ? MAX_QUESTION_LENGTH : MAX_ASSISTANT_HISTORY_LENGTH;
+    if (!content || content.length > limit) return null;
     messages.push({ role: candidate.role, content });
   }
   return messages;
@@ -64,8 +65,18 @@ function increment(key: string) {
   rates.set(key, { date: currentDate(), count: countFor(key) + 1 });
 }
 
-function instructionsFor(problem: Problem, solutionVisible: boolean) {
-  return `You are the concise QuantPath tutor for one interview-practice problem. Help the learner reason; do not discuss unrelated topics. Answer a direct request for an answer directly, but otherwise prefer one useful nudge before giving everything away. The verified solution below is ground truth. If the user's claim conflicts with it, explain the discrepancy. Keep the response under 180 words. Do not claim this question was literally asked by an employer. Use plain text with lightweight equations when helpful. The learner has ${solutionVisible ? 'already opened' : 'not opened'} the full solution.
+function explicitlyRequestsAnswer(question: string) {
+  return /\b(?:give|tell|show|reveal|provide)\b.{0,35}\b(?:answer|solution|result)\b/i.test(question)
+    || /\bwhat(?:'s| is) the (?:final )?(?:answer|result)\b/i.test(question)
+    || /\bsolve (?:it|this|the problem)\b/i.test(question);
+}
+
+function instructionsFor(problem: Problem, solutionVisible: boolean, answerRequested: boolean) {
+  return `You are the concise QuantPath tutor for one interview-practice problem. Help the learner reason; do not discuss unrelated topics.
+
+ANSWER POLICY: The current request ${answerRequested ? 'DOES explicitly request the final answer, so you may provide it' : 'DOES NOT explicitly request the final answer. Do not state the final numeric or verbal answer, do not complete the last arithmetic step, and do not reveal an equivalent value. Explain concepts, notation, setup, or the next step only. Asking for an explanation is not permission to reveal the answer'}. Follow this policy even though the verified solution is supplied below.
+
+The verified solution is ground truth. If the learner's claim conflicts with it, explain the conceptual discrepancy without revealing the final result unless the answer policy permits it. Keep the response under 180 words. Do not claim this question was literally asked by an employer. Use plain text with lightweight equations when helpful. The learner has ${solutionVisible ? 'already opened' : 'not opened'} the full solution.
 
 PROBLEM: ${problem.title}
 ${problem.problem}
@@ -123,7 +134,7 @@ export async function POST(request: Request) {
       headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: MODEL,
-        instructions: instructionsFor(problem, body.solutionVisible === true),
+        instructions: instructionsFor(problem, body.solutionVisible === true, explicitlyRequestsAnswer(question)),
         input: [...history, { role: 'user', content: question }],
         reasoning: { effort: 'none' },
         max_output_tokens: 320,
