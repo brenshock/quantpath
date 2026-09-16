@@ -6,7 +6,7 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'QuantPrep — Technique-first quant interview practice',
+  title: 'QuantPath — Technique-first quant interview practice',
   description: 'Learn reusable quant interview techniques through progressive problems, guided hints, and verified solutions.',
 };
 

@@ -1,4 +1,4 @@
-# QuantPrep practice site
+# QuantPath practice site
 
 The site is a Vinext application deployed to OpenAI Sites. Problem content lives in `content/` and the accountless AI tutor is implemented by `app/api/tutor/route.ts` plus `components/tutor-chat.tsx`.
 
