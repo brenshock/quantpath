@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 export function SiteFooter() {
   return (
     <footer className="mt-12 border-t bg-card">
@@ -9,8 +7,8 @@ export function SiteFooter() {
           <p>Employer tags indicate practice themes, not verbatim, endorsed, or authenticated interview questions.</p>
         </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Legal and project information">
-          <Link className="hover:text-foreground hover:underline" href="/privacy">Privacy</Link>
-          <Link className="hover:text-foreground hover:underline" href="/terms">Terms</Link>
+          <a className="hover:text-foreground hover:underline" href="/privacy">Privacy</a>
+          <a className="hover:text-foreground hover:underline" href="/terms">Terms</a>
         </nav>
       </div>
     </footer>
