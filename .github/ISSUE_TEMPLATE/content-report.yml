@@ -1,0 +1,33 @@
+name: Problem or solution issue
+description: Report an unclear prompt, incorrect answer, or solution problem.
+title: "[Content]: "
+labels: ["content"]
+body:
+  - type: input
+    id: problem-id
+    attributes:
+      label: Problem ID
+      description: The ID shown in the problem data.
+      placeholder: firm-12
+    validations:
+      required: true
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue type
+      options:
+        - Incorrect final answer
+        - Incorrect or unclear reasoning
+        - Ambiguous prompt
+        - Hint reveals too much
+        - Employer tag or attribution
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What should be corrected?
+      description: Explain the issue and include an independent calculation or reference when possible.
+    validations:
+      required: true

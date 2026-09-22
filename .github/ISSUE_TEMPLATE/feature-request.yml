@@ -1,0 +1,26 @@
+name: Feature or problem suggestion
+description: Suggest a focused improvement, category, or new practice problem.
+title: "[Suggestion]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should be added or changed?
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Why would this help?
+      description: Describe the learner need or gap this addresses.
+    validations:
+      required: true
+  - type: checkboxes
+    id: originality
+    attributes:
+      label: Content confirmation
+      options:
+        - label: Any submitted problem wording is original and contains no confidential interview material.
+          required: true

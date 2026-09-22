@@ -1,0 +1,32 @@
+name: Website or AI tutor bug
+description: Report a reproducible interface, navigation, or tutor failure.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Do not include personal information, API keys, or secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open...
+        2. Select...
+        3. Ask...
+    validations:
+      required: true
+  - type: input
+    id: problem-id
+    attributes:
+      label: Problem ID
+      description: Include this when the issue concerns a specific problem.
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Safari on iPhone, Chrome on Windows, etc.

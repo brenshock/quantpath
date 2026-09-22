@@ -1,40 +1,79 @@
-# QuantPath practice site
+# QuantPath
 
-Production: https://quantpath.brenshock.chatgpt.site
+QuantPath is a free, technique-first practice site for quantitative interviews. It pairs a structured curriculum with mixed interview-style problems, progressive hints, verified solutions, and an optional problem-aware AI tutor.
 
-The site is a Vinext application deployed to OpenAI Sites. Problem content lives in `content/` and the accountless AI tutor is implemented by `app/api/tutor/route.ts` plus `components/tutor-chat.tsx`.
+**Live site:** [quantpath.brenshock.chatgpt.site](https://quantpath.brenshock.chatgpt.site)
 
-## AI tutor configuration
+## What it includes
 
-The tutor is disabled safely when `OPENAI_API_KEY` is absent. Add these as server runtime environment variables in the hosting provider; never put the API key in browser code or a `NEXT_PUBLIC_` variable.
+- 76 human-reviewed problems across 12 categories
+- Guided learning tracks with three introductory problems per category
+- Mixed practice with search, difficulty, category, and employer-theme filters
+- Progressive hints and fully worked, verified solutions
+- Original variants inspired by common quantitative-interview themes
+- An account-free AI tutor grounded in the current problem and verified solution
+- Privacy and terms pages with no advertising or third-party analytics
 
-- `OPENAI_API_KEY`: required project-scoped OpenAI API key
-- `TUTOR_ENABLED`: optional kill switch; set to `false` to stop model calls
-- `TUTOR_RATE_LIMIT_SALT`: optional random secret for hashing IP addresses used by the best-effort server limiter
+Employer tags describe practice themes associated with public official material or candidate reports. They do not claim that the displayed wording was used by, endorsed by, or authenticated by an employer.
 
-The tutor uses `gpt-5.6-luna` through the Responses API, does not request response storage, and sends only the selected problem, its verified answer, and the six most recent chat messages.
+## Curriculum
 
-Current caps:
+The current categories are counting, conditional probability, expected value, linearity, symmetry, recursion, random walks, statistics, logic, games, estimation, and markets.
 
-- 500 characters per question
-- 6 prior messages sent to the model; user messages are capped at 500 characters and tutor replies at 2,400 characters
-- 8 user questions per problem conversation in the browser
-- 10 successful tutor questions per browser per day
-- 10 requests per anonymous browser ID and 30 requests per hashed IP per day on the server
-- 4 requests per browser and 8 requests per hashed IP per minute on the server
-- 320 maximum output tokens and a prompt instruction to stay under 180 words
-- no model tools, web search, file access, or user accounts
+Problem data lives in [`content/problems`](content/problems). Each JSON record contains the prompt, difficulty, categories, hints, solution, key insight, common mistakes, source notes, verification information, and review status. The schema is defined in [`content/problem.schema.json`](content/problem.schema.json).
 
-The server limiter is intentionally best-effort because Worker memory is not durable across instances. The browser cap improves ordinary usage, while the enforced OpenAI project spend limit is the billing backstop. If traffic grows, replace or supplement the in-memory limiter with durable Cloudflare storage.
+## AI tutor
 
-Run locally with:
+The tutor uses OpenAI's Responses API with `gpt-5.6-luna`. The server supplies the selected problem and verified solution as context. It is instructed to teach without revealing the final answer unless the user explicitly requests it.
+
+The tutor has no web access or external tools. It uses short conversations, bounded inputs and outputs, browser and server request limits, and a server-side API key. The rest of the site works without configuring AI.
+
+## Technology
+
+- React 19 and TypeScript
+- Vinext and Tailwind CSS
+- Cloudflare Workers-compatible server routes
+- OpenAI Responses API
+- OpenAI Sites hosting
+
+## Local development
+
+Requires Node.js 22.13 or newer and npm.
 
 ```bash
+npm install
 npm run dev
 ```
 
-Build with:
+Then open [http://localhost:3000](http://localhost:3000).
+
+To enable the tutor locally, copy the environment template and add a project-scoped API key:
 
 ```bash
+cp .env.example .env.local
+```
+
+```env
+OPENAI_API_KEY=your_project_key
+TUTOR_ENABLED=true
+TUTOR_RATE_LIMIT_SALT=a_random_secret
+```
+
+Never commit `.env.local` or expose the API key through a `NEXT_PUBLIC_` variable.
+
+## Validation
+
+```bash
+npx tsc --noEmit
 npm run build
 ```
+
+## Contributing
+
+Bug reports, solution corrections, new problem suggestions, and focused improvements are welcome through GitHub Issues. Please use the matching issue template and include the problem ID when reporting content.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution guidelines.
+
+## License
+
+QuantPath is released under the [MIT License](LICENSE).
