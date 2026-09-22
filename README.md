@@ -70,7 +70,7 @@ npm run build
 
 ## Contributing
 
-Bug reports, solution corrections, new problem suggestions, and focused improvements are welcome through GitHub Issues. Please use the matching issue template and include the problem ID when reporting content.
+Bug reports, solution corrections, new problem suggestions, and focused improvements are welcome through [GitHub Issues](https://github.com/brenshock/quantpath/issues/new/choose). Please use the matching issue template and include the problem ID when reporting content.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution guidelines.
 

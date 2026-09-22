@@ -7,6 +7,14 @@ export function SiteFooter() {
           <p>Employer tags indicate practice themes, not verbatim, endorsed, or authenticated interview questions.</p>
         </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Legal and project information">
+          <a
+            className="hover:text-foreground hover:underline"
+            href="https://github.com/brenshock/quantpath/issues/new/choose"
+            rel="noreferrer"
+            target="_blank"
+          >
+            Report an issue
+          </a>
           <a className="hover:text-foreground hover:underline" href="/privacy">Privacy</a>
           <a className="hover:text-foreground hover:underline" href="/terms">Terms</a>
         </nav>
