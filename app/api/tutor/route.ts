@@ -23,8 +23,8 @@ const MODEL = 'gpt-5.6-luna';
 
 const problemModules = import.meta.glob('../../../content/problems/**/*.json', { eager: true, import: 'default' });
 const problems = new Map((Object.values(problemModules) as Problem[]).map((problem) => [problem.id, problem]));
-const globalRateState = globalThis as typeof globalThis & { __quantprepTutorRates?: Map<string, RateBucket> };
-const rates = globalRateState.__quantprepTutorRates ??= new Map<string, RateBucket>();
+const globalRateState = globalThis as typeof globalThis & { __quantpathTutorRates?: Map<string, RateBucket> };
+const rates = globalRateState.__quantpathTutorRates ??= new Map<string, RateBucket>();
 
 function json(message: string, status: number, code: string) {
   return Response.json({ message, code }, { status });
@@ -49,9 +49,8 @@ function normalizeHistory(value: unknown): ChatMessage[] | null {
   return messages;
 }
 
-async function hashedIp(request: Request) {
+async function hashedIp(request: Request, salt: string) {
   const ip = request.headers.get('cf-connecting-ip') ?? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
-  const salt = process.env.TUTOR_RATE_LIMIT_SALT ?? 'quantprep-rate-limit';
   const bytes = new TextEncoder().encode(`${salt}:${ip}`);
   const digest = await crypto.subtle.digest('SHA-256', bytes);
   return Array.from(new Uint8Array(digest)).slice(0, 12).map((byte) => byte.toString(16).padStart(2, '0')).join('');
@@ -115,12 +114,13 @@ export async function POST(request: Request) {
   if (!/^[a-zA-Z0-9-]{8,64}$/.test(anonymousId)) return json('Anonymous session ID is invalid.', 400, 'invalid_session');
 
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey || process.env.TUTOR_ENABLED === 'false') {
-    return json('The AI tutor is built but not connected yet. Hints and verified solutions remain available.', 503, 'tutor_not_configured');
+  const rateLimitSalt = process.env.TUTOR_RATE_LIMIT_SALT;
+  if (!apiKey || !rateLimitSalt || process.env.TUTOR_ENABLED === 'false') {
+    return json('The AI tutor is unavailable right now. Hints and verified solutions remain available.', 503, 'tutor_not_configured');
   }
 
   const date = currentDate();
-  const ipHash = await hashedIp(request);
+  const ipHash = await hashedIp(request, rateLimitSalt);
   const browserKey = `browser:${date}:${anonymousId}`;
   const ipKey = `ip:${date}:${ipHash}`;
   const minute = new Date().toISOString().slice(0, 16);

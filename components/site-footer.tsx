@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export function SiteFooter() {
   return (
     <footer className="mt-12 border-t bg-card">
@@ -15,8 +17,8 @@ export function SiteFooter() {
           >
             Report an issue
           </a>
-          <a className="hover:text-foreground hover:underline" href="/privacy">Privacy</a>
-          <a className="hover:text-foreground hover:underline" href="/terms">Terms</a>
+          <Link className="hover:text-foreground hover:underline" href="/privacy">Privacy</Link>
+          <Link className="hover:text-foreground hover:underline" href="/terms">Terms</Link>
         </nav>
       </div>
     </footer>

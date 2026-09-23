@@ -18,7 +18,7 @@ Employer tags describe practice themes associated with public official material 
 
 ## Curriculum
 
-The current categories are counting, conditional probability, expected value, linearity, symmetry, recursion, random walks, statistics, logic, games, estimation, and markets.
+The categories are counting, conditional probability, expected value, linearity, symmetry, recursion, random walks, statistics, logic, games, estimation, and markets.
 
 Problem data lives in [`content/problems`](content/problems). Each JSON record contains the prompt, difficulty, categories, hints, solution, key insight, common mistakes, source notes, verification information, and review status. The schema is defined in [`content/problem.schema.json`](content/problem.schema.json).
 
@@ -34,7 +34,7 @@ The tutor has no web access or external tools. It uses short conversations, boun
 - Vinext and Tailwind CSS
 - Cloudflare Workers-compatible server routes
 - OpenAI Responses API
-- OpenAI Sites hosting
+- Cloudflare Workers deployment
 
 ## Local development
 
@@ -57,9 +57,21 @@ cp .env.example .env.local
 OPENAI_API_KEY=your_project_key
 TUTOR_ENABLED=true
 TUTOR_RATE_LIMIT_SALT=a_random_secret
+SITE_URL=http://localhost:3000
 ```
 
 Never commit `.env.local` or expose the API key through a `NEXT_PUBLIC_` variable.
+
+## Cloudflare deployment
+
+QuantPath is ready for Cloudflare Workers builds connected to this GitHub repository.
+
+- Build command: `npm run build`
+- Production deploy command: `npm run deploy`
+- Preview deploy command: `npm run deploy:preview`
+- Production branch: `main`
+
+Configure `OPENAI_API_KEY` and `TUTOR_RATE_LIMIT_SALT` as encrypted Worker secrets. Set `TUTOR_ENABLED=true` and `SITE_URL` to the public Worker or custom-domain origin as runtime variables.
 
 ## Validation
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { Bot, RotateCcw, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,8 +10,9 @@ type Message = { role: 'user' | 'assistant'; content: string };
 const MAX_QUESTION_LENGTH = 500;
 const DAILY_LIMIT = 10;
 const CONVERSATION_LIMIT = 8;
-const USAGE_KEY = 'quantprep-tutor-usage-v1';
-const ID_KEY = 'quantprep-anonymous-id-v1';
+const USAGE_KEY = 'quantpath-tutor-usage-v1';
+const ID_KEY = 'quantpath-anonymous-id-v1';
+const USAGE_EVENT = 'quantpath-tutor-usage';
 
 function today() {
   return new Date().toISOString().slice(0, 10);
@@ -34,20 +35,28 @@ function anonymousId() {
   return next;
 }
 
+function subscribeToUsage(callback: () => void) {
+  window.addEventListener('storage', callback);
+  window.addEventListener(USAGE_EVENT, callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener(USAGE_EVENT, callback);
+  };
+}
+
+function updateUsage(count: number) {
+  localStorage.setItem(USAGE_KEY, JSON.stringify({ date: today(), count }));
+  window.dispatchEvent(new Event(USAGE_EVENT));
+}
+
 export function TutorChat({ problemId, solutionVisible }: { problemId: string; solutionVisible: boolean }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [dailyUsed, setDailyUsed] = useState(0);
+  const dailyUsed = useSyncExternalStore(subscribeToUsage, loadUsage, () => 0);
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  useEffect(() => {
-    setDailyUsed(loadUsage());
-    const syncUsage = () => setDailyUsed(loadUsage());
-    window.addEventListener('storage', syncUsage);
-    return () => window.removeEventListener('storage', syncUsage);
-  }, []);
   useEffect(() => () => abortRef.current?.abort(), []);
 
   const userMessages = useMemo(() => messages.filter((message) => message.role === 'user').length, [messages]);
@@ -59,7 +68,7 @@ export function TutorChat({ problemId, solutionVisible }: { problemId: string; s
     const cleanQuestion = question.trim().slice(0, MAX_QUESTION_LENGTH);
     const currentUsage = loadUsage();
     if (currentUsage >= DAILY_LIMIT) {
-      setDailyUsed(currentUsage);
+      window.dispatchEvent(new Event(USAGE_EVENT));
       setNotice('Daily tutor limit reached. Try again tomorrow.');
       return;
     }
@@ -93,21 +102,12 @@ export function TutorChat({ problemId, solutionVisible }: { problemId: string; s
         throw new Error(error?.message ?? 'The tutor could not answer right now.');
       }
 
-      if (!response.body) throw new Error('The tutor returned an empty response.');
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let answer = '';
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        answer += decoder.decode(value, { stream: true });
-        setMessages((current) => [...current.slice(0, -1), { role: 'assistant', content: answer }]);
-      }
+      const answer = await response.text();
+      if (!answer) throw new Error('The tutor returned an empty response.');
+      setMessages((current) => [...current.slice(0, -1), { role: 'assistant', content: answer }]);
 
       const nextUsed = Math.min(DAILY_LIMIT, loadUsage() + 1);
-      setDailyUsed(nextUsed);
-      localStorage.setItem(USAGE_KEY, JSON.stringify({ date: today(), count: nextUsed }));
+      updateUsage(nextUsed);
     } catch (error) {
       if (controller.signal.aborted) return;
       const message = error instanceof Error ? error.message : 'The tutor could not answer right now.';
