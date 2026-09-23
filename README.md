@@ -71,7 +71,7 @@ QuantPath is ready for Cloudflare Workers builds connected to this GitHub reposi
 - Preview deploy command: `npm run deploy:preview`
 - Production branch: `main`
 
-Configure `OPENAI_API_KEY` and `TUTOR_RATE_LIMIT_SALT` as encrypted Worker secrets. Set `TUTOR_ENABLED=true` and `SITE_URL` to the public Worker or custom-domain origin as runtime variables.
+Configure `OPENAI_API_KEY` and `TUTOR_RATE_LIMIT_SALT` as encrypted Worker secrets and set `TUTOR_ENABLED=true` as a runtime variable. Set `SITE_URL` to the public Worker or custom-domain origin as a Cloudflare build variable so canonical links, `robots.txt`, and the sitemap use the production address.
 
 ## Validation
 
