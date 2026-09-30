@@ -9,8 +9,8 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "wrangler dev --config dist/server/wrangler.json",
-    "deploy": "wrangler deploy --config dist/server/wrangler.json --name quantpath",
-    "deploy:preview": "wrangler versions upload --config dist/server/wrangler.json --name quantpath",
+    "deploy": "wrangler deploy --config dist/server/wrangler.json --name app",
+    "deploy:preview": "wrangler versions upload --config dist/server/wrangler.json --name app",
     "lint": "oxlint app components/tutor-chat.tsx components/site-footer.tsx components/legal-page.tsx components/ui/badge.tsx components/ui/button.tsx components/ui/card.tsx components/ui/native-select.tsx lib",
     "format": "oxfmt"
   },
