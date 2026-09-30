@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = 'https://quantpath.brenshock.chatgpt.site';
+const FALLBACK_SITE_URL = 'https://app.quantpath.workers.dev';
 
 export function getSiteUrl() {
   const configuredUrl = process.env.SITE_URL?.trim();
